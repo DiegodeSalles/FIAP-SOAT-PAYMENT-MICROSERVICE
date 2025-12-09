@@ -1,0 +1,10 @@
+fastapi[standard]
+uvicorn
+motor
+pytest
+pytest-bdd
+httpx
+pydantic-settings
+requests
+pytest-asyncio
+pytest-cov
