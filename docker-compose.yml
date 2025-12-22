@@ -2,10 +2,13 @@ services:
   payment-service:
     build: .
     ports:
-      - "8000:8000"
+      - "8083:8000"
     environment:
       - MONGODB_URL=mongodb://mongodb:27017
       - MONGODB_DB_NAME=payment_db
+      - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
+      - MP_POS_ID=${MP_POS_ID}
+      - MP_BASE_URL=${MP_BASE_URL}
     depends_on:
       - mongodb
 
