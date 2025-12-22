@@ -12,7 +12,7 @@ class PaymentStatus(str, Enum):
 class Payment(BaseModel):
     id: str
     order_id: str
-    customer_id: str
+    customer_id: Optional[str] = None
     amount: float
     status: PaymentStatus = PaymentStatus.PENDING
     qr_code_payload: Optional[str] = None

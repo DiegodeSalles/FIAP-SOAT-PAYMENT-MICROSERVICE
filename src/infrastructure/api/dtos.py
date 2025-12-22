@@ -7,7 +7,7 @@ from datetime import datetime
 
 class CreatePaymentRequestDTO(BaseModel):
     order_id: str = Field(..., description="Unique identifier for the order")
-    customer_id: str = Field(..., description="ID of the customer")
+    customer_id: Optional[str] = Field(None, description="ID of the customer")
     amount: float = Field(..., gt=0, description="Amount to charge")
 
 class WebhookDataDTO(BaseModel):
@@ -25,7 +25,7 @@ class WebhookRequestDTO(BaseModel):
 
 class PaymentResponseDTO(BaseModel):
     id: Optional[str] = Field(None, description="Unique identifier for the payment")
-    customer_id: str = Field(..., description="Customer ID")
+    customer_id: Optional[str] = Field(None, description="Customer ID")
     amount: float = Field(..., description="Amount charged")
     order_id: str = Field(..., description="Unique identifier for the order")
     qr_code_payload: Optional[str] = Field(None, description="QR code payload")
