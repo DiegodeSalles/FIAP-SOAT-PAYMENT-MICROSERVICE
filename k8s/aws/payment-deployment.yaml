@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: payment
-          image: fiap-fastfood-ms-payment:latest
+          image: 674080151285.dkr.ecr.us-east-1.amazonaws.com/fiap-fastfood-ms-payment
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
