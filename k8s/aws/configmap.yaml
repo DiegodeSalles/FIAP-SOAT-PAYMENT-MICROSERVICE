@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-config
+  namespace: fastfood
+data:
+  MONGODB_DB_NAME: mspayment
