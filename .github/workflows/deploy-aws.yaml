@@ -3,7 +3,7 @@ name: CI/CD Orders MS
 on:
   pull_request:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 env:
   AWS_REGION: us-east-1
@@ -14,8 +14,7 @@ jobs:
   deploy:
     name: Build & Deploy to EKS
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-    #&& github.ref == 'refs/heads/main' -- adicioanr dpoeis, primeiro é só teste
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout
@@ -24,9 +23,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ASIAZZ4SO232UTWJX6P7
-          aws-secret-access-key: iqiuWeszONEc7jUPmNIfg2u7oXCMDriDBFvnnkua
-          aws-session-token: IQoJb3JpZ2luX2VjELv//////////wEaCXVzLXdlc3QtMiJGMEQCIAa3w0qRIM0WehO+lH1jRzbaasENfYAYiZEd9/XOlEusAiBDexIrLn717LdOdtMLm2RdAqEH+kEJ+doa6LT1wRiA1Cq2AgiE//////////8BEAUaDDY3NDA4MDE1MTI4NSIMP8rPMCUQDhKCbBO2KooCf72pBQ42y9EWuXwcQ1GzrSGmC6J0BAptdIEiiTLRP5kcT8m0/Is6iVGdSBEEf3YJj7eVd2dwPhi+PYDTJ1ljryjrC4Vku3kky8QAVGX8p1BOTOiV63NJ7ubbnaws9yl7o9hMQBH3k7+xway7124xEwKxzdYQANGGhwLnBGrfvI1E/60nO+95R/0d8QA4oTmTNHremOnYr3gblL12s7shP3zcIyettBt8ccsGQeCkHUgWKqPh8qdW7jpubR3BLzL812gvH+AMK3j+UL2P9Nr9ni4Snt2wlUhcXzoEwBuV253w6mKbWjNzwn0E3a+D9ASn7MIWMQK3izvtAD1slFGQx2VN1NJ7ARliTVAw17f8ygY6ngG38sZNh8ajY0j9DQ76vv1czx6GxUZWWMLTn/Rv6eShTeQwvbIWSRDgaaTI3QO0MDIC9b/2ctzBBWT10yTB0jnW8AICtWC709/kZqEcDI2Od21aip4GvvMGd8tl/Vwq5Zo9lu42QXLDzdKbvO/UUCzjrJNicV/nlVzi/od2GLJ2qWdQhdxbOJstetufqcXxJ3ow+sK19Mx6mUxl5YfPkw==
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -35,7 +34,7 @@ jobs:
       - name: Build, tag and push image
         run: |
           IMAGE_TAG=${GITHUB_SHA}
-          ECR_URI=674080151285.dkr.ecr.${AWS_REGION}.amazonaws.com
+          ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
           docker build -t ${ECR_REPOSITORY}:${IMAGE_TAG} .
           docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${ECR_URI}/${ECR_REPOSITORY}:latest
