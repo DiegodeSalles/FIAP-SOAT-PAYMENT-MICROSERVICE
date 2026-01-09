@@ -49,24 +49,23 @@ jobs:
             --region ${AWS_REGION} \
             --name ${EKS_CLUSTER_NAME}
 
-      - name: Prepare Secrets with envsubst
-        shell: bash
+      - name: Deploy to Kubernetes
         env:
           MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
           MP_POS_ID: ${{ secrets.MP_POS_ID }}
           MP_BASE_URL: ${{ secrets.MP_BASE_URL }}
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
         run: |
-          # O comando envsubst substitui apenas as variáveis listadas para evitar efeitos colaterais
-          envsubst '${MP_ACCESS_TOKEN},${MP_POS_ID},${MP_BASE_URL},${MONGODB_URL}' < k8s/aws/secret.yaml > k8s/aws/secret-generated.yaml
-          
-          # Debug
-          cat k8s/aws/secret-generated.yaml | sed 's/: .*/: ***/'
-
-      - name: Deploy to Kubernetes
-        run: |
           kubectl apply -f k8s/aws/namespace.yaml
-          kubectl apply -f k8s/aws/secret-generated.yaml
+
+          kubectl create secret generic payment-secret \
+            --namespace fastfood \
+            --from-literal=MP_ACCESS_TOKEN="$MP_ACCESS_TOKEN" \
+            --from-literal=MP_POS_ID="$MP_POS_ID" \
+            --from-literal=MP_BASE_URL="$MP_BASE_URL" \
+            --from-literal=MONGODB_URL="$MONGODB_URL" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
           kubectl apply -f k8s/aws/configmap.yaml
           kubectl apply -f k8s/aws/payment-deployment.yaml
           kubectl apply -f k8s/aws/payment-service.yaml
