@@ -42,6 +42,6 @@ spec:
                   key: MP_POS_ID
             - name: MP_BASE_URL
               valueFrom:
-                secretKeyRef:
-                  name: payment-secret
+                configMapKeyRef:
+                  name: payment-config
                   key: MP_BASE_URL

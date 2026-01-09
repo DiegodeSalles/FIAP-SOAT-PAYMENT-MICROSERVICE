@@ -5,3 +5,4 @@ metadata:
   namespace: fastfood
 data:
   MONGODB_DB_NAME: mspayment
+  MP_BASE_URL: https://api.mercadopago.com
