@@ -1,12 +1,11 @@
 name: Build
 on:
-  pull_request:
   push:
   branches:
       - main
       - develop
   pull_request:
-  types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened]
 jobs:
   sonarqube:
   name: SonarQube Cloud
