@@ -57,8 +57,11 @@ jobs:
           MP_BASE_URL: ${{ secrets.MP_BASE_URL }}
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
         run: |
-          # Substitui as variáveis no arquivo mantendo a segurança
-          envsubst < k8s/aws/secret.yaml > k8s/aws/secret-generated.yaml
+          # O comando envsubst substitui apenas as variáveis listadas para evitar efeitos colaterais
+          envsubst '${MP_ACCESS_TOKEN},${MP_POS_ID},${MP_BASE_URL},${MONGODB_URL}' < k8s/aws/secret.yaml > k8s/aws/secret-generated.yaml
+          
+          # Debug
+          cat k8s/aws/secret-generated.yaml | sed 's/: .*/: ***/'
 
       - name: Deploy to Kubernetes
         run: |
