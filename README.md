@@ -1,10 +1,13 @@
-# 🍔 Microsserviço de Pagamentos - Fast Food Totem
+# 🍔 Microsserviço de Pagamentos - FIAP Fastfood
 
 ![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.128+-009688?style=flat&logo=fastapi&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Motor-47A248?style=flat&logo=mongodb&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-Hexagonal-orange?style=flat)
 ![Tests](https://img.shields.io/badge/Tests-Pytest%20%7C%20BDD-brightgreen?style=flat)
+[![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=DiegodeSalles_FIAP-SOAT-PAYMENT-MICROSERVICE&metric=alert_status)](https://sonarcloud.io/dashboard?id=DiegodeSalles_FIAP-SOAT-PAYMENT-MICROSERVICE)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DiegodeSalles_FIAP-SOAT-PAYMENT-MICROSERVICE&metric=coverage)](https://sonarcloud.io/dashboard?id=DiegodeSalles_FIAP-SOAT-PAYMENT-MICROSERVICE)
+
 
 Este projeto é um **Microsserviço de Pagamentos** isolado, responsável por todo o ciclo de vida financeiro dos pedidos da lanchonete.  
 Ele integra-se com o **Mercado Pago** para geração de **QR Codes (Pix)** e processamento de **Webhooks**.
@@ -37,6 +40,27 @@ src/
 Docker e Docker Compose (recomendado)
 
 Python 3.13+ (apenas para desenvolvimento local)
+
+## 📊 SonarCloud - Qualidade de Código
+
+O projeto está integrado com o **SonarCloud** para análise contínua de qualidade:
+
+### Métricas Monitoradas
+
+- **Cobertura de Código**: Mínimo de cobertura definido pelos testes
+- **Code Smells**: Identificação de más práticas
+- **Bugs**: Detecção de possíveis bugs
+- **Vulnerabilidades**: Análise de segurança
+- **Duplicação**: Código duplicado
+- **Maintainability**: Índice de manutenibilidade
+
+### Visualizar Resultados
+
+Acesse o dashboard do SonarCloud em:
+- https://sonarcloud.io/dashboard?id=WeesleyAlves_FIAP-SOAT-MICROSERVICE-ORDERS
+
+<img width="1634" height="980" alt="coverage-ms-payment" src="https://github.com/user-attachments/assets/6df3525a-336c-4072-9ebe-88165595a5c6" />
+
 
 ## 🚀 Como Rodar (Jeito Fácil: Docker)
 
