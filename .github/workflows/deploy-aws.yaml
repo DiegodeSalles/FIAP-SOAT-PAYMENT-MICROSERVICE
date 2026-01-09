@@ -49,6 +49,13 @@ jobs:
             --region ${AWS_REGION} \
             --name ${EKS_CLUSTER_NAME}
 
+      - name: Create Secrets File
+        run: |
+          sed -i "s|{{MP_ACCESS_TOKEN}}|${{ secrets.MP_ACCESS_TOKEN }}|g" k8s/aws/secret.yaml
+          sed -i "s|{{MP_POS_ID}}|${{ secrets.MP_POS_ID }}|g" k8s/aws/secret.yaml
+          sed -i "s|{{MP_BASE_URL}}|${{ secrets.MP_BASE_URL }}|g" k8s/aws/secret.yaml
+          sed -i "s|{{MONGODB_URL}}|${{ secrets.MONGODB_URL }}|g" k8s/aws/secret.yaml
+
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/aws/namespace.yaml
