@@ -49,17 +49,21 @@ jobs:
             --region ${AWS_REGION} \
             --name ${EKS_CLUSTER_NAME}
 
-      - name: Create Secrets File
+      - name: Prepare Secrets with envsubst
+        shell: bash
+        env:
+          MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
+          MP_POS_ID: ${{ secrets.MP_POS_ID }}
+          MP_BASE_URL: ${{ secrets.MP_BASE_URL }}
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
         run: |
-          sed -i "s|{{MP_ACCESS_TOKEN}}|${{ secrets.MP_ACCESS_TOKEN }}|g" k8s/aws/secret.yaml
-          sed -i "s|{{MP_POS_ID}}|${{ secrets.MP_POS_ID }}|g" k8s/aws/secret.yaml
-          sed -i "s|{{MP_BASE_URL}}|${{ secrets.MP_BASE_URL }}|g" k8s/aws/secret.yaml
-          sed -i "s|{{MONGODB_URL}}|${{ secrets.MONGODB_URL }}|g" k8s/aws/secret.yaml
+          # Substitui as variáveis no arquivo mantendo a segurança
+          envsubst < k8s/aws/secret.yaml > k8s/aws/secret-generated.yaml
 
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/aws/namespace.yaml
-          kubectl apply -f k8s/aws/secret.yaml
+          kubectl apply -f k8s/aws/secret-generated.yaml
           kubectl apply -f k8s/aws/configmap.yaml
           kubectl apply -f k8s/aws/payment-deployment.yaml
           kubectl apply -f k8s/aws/payment-service.yaml
