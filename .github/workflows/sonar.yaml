@@ -27,6 +27,11 @@ jobs:
           pip install pytest pytest-cov pytest-bdd httpx
       
       - name: Run Tests & Coverage
+        env:
+          MONGODB_URL: "mongodb://localhost:27017/"
+          MONGO_DB_NAME: "test_db"
+          MP_ACCESS_TOKEN: "test-access-token"
+          MP_POS_ID: "test-pos-id"
         run: |
           pytest --cov=src --cov-report=xml:coverage.xml
         
