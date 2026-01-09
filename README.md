@@ -1,74 +1,191 @@
-# 📋 Pré-requisitos
+# 🍔 Microsserviço de Pagamentos - Fast Food Totem
 
-- **Docker** e **Docker Compose** (Recomendado)
-- Ou **Python 3.13+** e **MongoDB** rodando localmente
+![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.128+-009688?style=flat&logo=fastapi&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Motor-47A248?style=flat&logo=mongodb&logoColor=white)
+![Architecture](https://img.shields.io/badge/Architecture-Hexagonal-orange?style=flat)
+![Tests](https://img.shields.io/badge/Tests-Pytest%20%7C%20BDD-brightgreen?style=flat)
 
+Este projeto é um **Microsserviço de Pagamentos** isolado, responsável por todo o ciclo de vida financeiro dos pedidos da lanchonete.  
+Ele integra-se com o **Mercado Pago** para geração de **QR Codes (Pix)** e processamento de **Webhooks**.
 
-## 🚀 Como Rodar (Docker)
+O projeto foi desenhado seguindo rigorosamente a **Arquitetura Hexagonal (Ports and Adapters)**, garantindo **desacoplamento**, **testabilidade** e **facilidade de manutenção**.
 
-Se você não quer configurar ambiente Python, use o Docker. Ele sobe a aplicação e o banco de dados automaticamente.
+## 🏛️ Arquitetura do Projeto
 
-1. **Configure as Variáveis de Ambiente:**
-   Crie um arquivo `.env` na raiz (baseado no exemplo abaixo) ou garanta que as variáveis estejam no `docker-compose.yml`.
+O código está organizado para separar as **regras de negócio (Domínio)** de **frameworks externos** (API, Banco de Dados).
 
-2. **Suba o Ambiente:**
-   ```bash
-   docker-compose up -d --build
-   ```
-3. **Acesse a Documentação:**
-A API estará disponível em: http://localhost:8000/docs
+```text
+src/
+├── domain/             # 🧠 Núcleo (Core): Entidades e Regras de Negócio puras
+│                       #    (Não conhece banco de dados nem API)
+│
+├── ports/              # 🔌 Portas: Interfaces (Contratos) de entrada e saída
+│                       #    que definem como o mundo externo interage com a 
+│
+├── use_cases/          # ⚙️ Casos de Uso: Orquestram o fluxo de dados
+│                       #    (Criar Pagamento, Processar Webhook, etc.)
+│
+└── infrastructure/     # 🧱 Adaptadores: Implementações concretas das Portas
+    ├── api/            #    Adapter de Entrada: FastAPI (Rotas, DTOs)
+    ├── db/             #    Adapter de Saída: MongoDB (Motor)
+    └── providers/      #    Adapter de Saída: Mercado Pago
+```
 
-## 🐍 Como Rodar Manualmente (Python)
-Para quem for desenvolver ou debugar o código.
-1. Criar Ambiente Virtual
+## 📋 Pré-requisitos
 
-    Isso isola as bibliotecas do projeto do seu sistema global.
-    ```PowerShell
-    # Windows
-    python -m venv venv
-    .\venv\Scripts\activate
-    ```
+Docker e Docker Compose (recomendado)
 
-    ```bash
-    # Linux/Mac
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-2. Instalar Dependências
+Python 3.13+ (apenas para desenvolvimento local)
 
+## 🚀 Como Rodar (Jeito Fácil: Docker)
+
+Método recomendado para garantir que todas as dependências subam corretamente.
+
+1️⃣ Clone o repositório
+```bash
+git clone git@github.com:DiegodeSalles/FIAP-SOAT-PAYMENT-MICROSERVICE.git
+cd FIAP-SOAT-PAYMENT-MICROSERVICE
+```
+
+2️⃣ Configure as Variáveis de Ambiente
+
+Renomeie o arquivo .env.example para .env (se existir) ou crie um .env na raiz do projeto:
+
+```text
+MONGODB_URL=mongodb://mongo:27017
+MONGODB_DB_NAME=payment_db
+
+MP_ACCESS_TOKEN=seu_token_de_teste_mercado_pago
+MP_POS_ID=seu_pos_id_mercado_pago
+MP_BASE_URL=https://api.mercadopago.com
+```
+
+3️⃣ Suba a aplicação
+```bash
+docker-compose up -d --build
+```
+
+4️⃣ Acesse a documentação
+
+Swagger UI: http://localhost:8000/docs
+
+ReDoc: http://localhost:8000/redoc
+
+## 🧪 Como Rodar os Testes
+
+O projeto possui Testes Unitários e Testes de Comportamento (BDD).
+
+▶️ Via Docker (recomendado)
+
+```bash
+docker-compose run --rm app pytest --cov=src
+```
+
+▶️ Localmente (com venv)
+Criar e ativar o ambiente virtual
+```bash
+python -m venv venv
+
+# Windows
+.\venv\Scripts\activate
+
+# Linux / Mac
+source venv/bin/activate
+```
+
+Instalar dependências
 ```bash
 pip install -r requirements.txt
 ```
-3. Configurar Variáveis de Ambiente
-Crie um arquivo .env na raiz do projeto com o seguinte conteúdo:
 
-## Banco de Dados (MongoDB)
-Se rodar local sem docker, geralmente é `localhost:27017`
-```bash
-MONGODB_URL=mongodb://localhost:27017
-MONGODB_DB_NAME=payment_db
-```
+### Executar os testes
 
-# Integração Mercado Pago
-Use credenciais de teste (Sandbox)
-
-```bash
-MP_BASE_URL=https://api.mercadopago.com
-MP_ACCESS_TOKEN=seu-access-token-aqui
-MP_POS_ID=seu-pos-id-aqui
-```
-
-Rode o servidor de desenvolvimento (com hot-reload):
-```bash
-uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
-# ou
-fastapi run src/main.py --reload --port 8000
-```
-
-# 🧪 Como Rodar os Testes
-
-O projeto utiliza Pytest e Pytest-BDD para testes unitários e de comportamento.
 ```bash
 pytest --cov=src
 ```
 
+## 🔌 Integração (Contrato de API)
+
+Para o time de Pedidos (Java) integrar com o serviço de pagamentos.
+
+1️⃣ Criar Pagamento
+
+Chame esta rota quando o cliente finalizar o pedido no Totem.
+
+Endpoint
+
+### `POST /api/v1/payments/`
+
+```json
+{
+  "order_id": "uuid-do-pedido",
+  "customer_id": "id-cliente",
+  "amount": 100.50
+}
+```
+
+Resposta
+
+Retorna o qr_code_payload (Copia e Cola / Imagem) para exibição na tela.
+
+2️⃣ Consultar Status (Polling)
+
+Utilize o order_id para verificar se o pagamento foi aprovado.
+
+Endpoint
+
+### `GET /api/v1/payments/order/{order_id}`
+
+
+Resposta
+```json
+{
+  "id": "uuid-pagamento",
+  "order_id": "uuid-do-pedido",
+  "status": "approved",
+  "amount": 100.50
+}
+```
+
+Status possíveis:
+
+pending
+
+approved
+
+rejected
+
+3️⃣ Webhook (Mercado Pago)
+
+Rota pública que recebe notificações do Mercado Pago.
+
+Endpoint
+
+### POST `/api/v1/webhook/`
+
+
+Ação
+
+Atualiza automaticamente o status do pagamento no banco de dados.
+
+## 🛠️ Stack Tecnológica
+
+| Tecnologia        | Função                                                      |
+|-------------------|-------------------------------------------------------------|
+| Python 3.13       | Linguagem principal                                         |
+| FastAPI           | Framework Web assíncrono e de alta performance              |
+| MongoDB           | Banco de dados NoSQL                                        |
+| Motor             | Driver assíncrono para MongoDB                              |
+| Mercado Pago SDK  | Integração externa de pagamentos                            |
+| Pytest + BDD      | Testes automatizados e Gherkin                              |
+| Docker            | Containerização e orquestração                              |
+| GitHub Actions    | CI/CD (SonarCloud e AWS EKS)                                |
+
+## 👤 Membros do projeto
+
+- Diego de Salles — RM362702
+- Lucas Felinto — RM363094
+- Maickel Alves — RM361616
+- Pedro Morgado — RM364209
+- Wesley Alves — RM364342
