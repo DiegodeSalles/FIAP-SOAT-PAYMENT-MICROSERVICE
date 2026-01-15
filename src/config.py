@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     mp_access_token: str = Field(..., validation_alias="MP_ACCESS_TOKEN", description="MercadoPago Access Token")
     mp_base_url: str = Field("https://api.mercadopago.com", validation_alias="MP_BASE_URL", description="MercadoPago API Base URL")
     mp_pos_id: str = Field(..., validation_alias="MP_POS_ID", description="MercadoPago POS ID")
-    order_status_url: str = Field(..., validation_alias="ORDER_STATUS_URL", description="Order service URL")
+    order_status_url: str = Field("http://orders/api/v1/admin/orders/status", validation_alias="ORDER_STATUS_URL", description="Order service URL")
     
     model_config = ConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
