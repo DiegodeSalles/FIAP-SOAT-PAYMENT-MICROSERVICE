@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from src.infrastructure.api.dtos import WebhookRequestDTO
 from src.infrastructure.db.mongo_repository import MongoPaymentRepository
 from src.infrastructure.db.mongo_client import MongoDBConnection
+from src.infrastructure.services.order_service_http import OrderServiceHTTP
 from src.use_cases.process_payment_webhook_use_case import ProcessPaymentWebhookUseCase
 from src.config import settings
 
@@ -14,10 +15,16 @@ def get_repository():
     db_name = settings.mongodb_db_name
     return MongoPaymentRepository(client, db_name)
 
+def get_order_service() -> OrderServiceHTTP:
+    return OrderServiceHTTP(
+        base_url=settings.order_status_url
+)
+
 def get_webhook_use_case(
-    repo: MongoPaymentRepository = Depends(get_repository)
+    repo: MongoPaymentRepository = Depends(get_repository),
+    order_service: OrderServiceHTTP = Depends(get_order_service),
 ) -> ProcessPaymentWebhookUseCase:
-    return ProcessPaymentWebhookUseCase(repo)
+    return ProcessPaymentWebhookUseCase(repo, order_service)
 
 @router_webhook.post("/", status_code=status.HTTP_200_OK)
 async def receive_webhook(

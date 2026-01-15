@@ -1,11 +1,13 @@
 from typing import Optional
 from src.domain.entities import Payment, PaymentStatus
+from src.infrastructure.services.order_service_http import OrderServiceHTTP
 from src.ports.repositories import PaymentRepository
 from src.infrastructure.api.dtos import WebhookRequestDTO
 
 class ProcessPaymentWebhookUseCase:
-    def __init__(self, repository: PaymentRepository):
+    def __init__(self, repository: PaymentRepository, order_service: OrderServiceHTTP):
         self.repository = repository
+        self.order_service = order_service
 
     async def execute(self, webhook_data: WebhookRequestDTO) -> Optional[Payment]:
         payment_id = webhook_data.data.external_reference        
@@ -24,4 +26,6 @@ class ProcessPaymentWebhookUseCase:
             new_status = PaymentStatus.REJECTED
 
         updated_payment = await self.repository.update_status(payment.id, new_status)
+        await self.order_service.notify_payment_status(updated_payment)
+        
         return updated_payment

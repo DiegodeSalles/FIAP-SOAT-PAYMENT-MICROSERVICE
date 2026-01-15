@@ -3,15 +3,17 @@ from unittest.mock import AsyncMock, patch, MagicMock
 from src.infrastructure.api import routers
 from src.use_cases.get_payment_status_use_case import GetPaymentStatusUseCase
 from src.use_cases.process_payment_webhook_use_case import ProcessPaymentWebhookUseCase
+from src.infrastructure.services.order_service_http import OrderServiceHTTP
 
 @patch('src.infrastructure.api.routers.settings')
 def test_missing_dependencies_factories(mock_settings):
     mock_repo = MagicMock()
+    mock_order_service = MagicMock(spec=OrderServiceHTTP)
 
     status_uc = routers.get_status_use_case(mock_repo)
     assert isinstance(status_uc, GetPaymentStatusUseCase)
     
-    webhook_uc = routers.get_webhook_use_case(mock_repo)
+    webhook_uc = routers.get_webhook_use_case(mock_repo, mock_order_service)
     assert isinstance(webhook_uc, ProcessPaymentWebhookUseCase)
 
 @pytest.mark.asyncio
