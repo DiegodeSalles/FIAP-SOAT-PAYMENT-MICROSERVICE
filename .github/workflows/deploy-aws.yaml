@@ -60,6 +60,7 @@ jobs:
           MP_ACCESS_TOKEN: ${{ secrets.MP_ACCESS_TOKEN }}
           MP_POS_ID: ${{ secrets.MP_POS_ID }}
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          ORDER_STATUS_URL: ${{ secrets.ORDER_STATUS_URL }}
         run: |
           kubectl apply -f k8s/aws/namespace.yaml
 
@@ -68,6 +69,7 @@ jobs:
             --from-literal=MP_ACCESS_TOKEN="$MP_ACCESS_TOKEN" \
             --from-literal=MP_POS_ID="$MP_POS_ID" \
             --from-literal=MONGODB_URL="$MONGODB_URL" \
+            --from-literal=ORDER_STATUS_URL="$ORDER_STATUS_URL" \
             --dry-run=client -o yaml | kubectl apply -f -
 
           kubectl apply -f k8s/aws/configmap.yaml

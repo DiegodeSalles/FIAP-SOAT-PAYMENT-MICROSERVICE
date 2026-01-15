@@ -8,6 +8,7 @@ from src.use_cases.get_payment_by_order_use_case import GetPaymentByOrderUseCase
 from src.use_cases.process_payment_webhook_use_case import ProcessPaymentWebhookUseCase
 from src.use_cases.get_payment_status_use_case import GetPaymentStatusUseCase
 from src.ports.gateways import PaymentGateway
+from src.infrastructure.services.order_service_http import OrderServiceHTTP
 from src.config import settings
 
 def get_repository():
@@ -21,6 +22,9 @@ def get_gateway() -> PaymentGateway:
         pos_id=settings.mp_pos_id
     )
 
+def get_order_service() -> OrderServiceHTTP:
+    return OrderServiceHTTP(base_url=settings.order_status_url)
+
 def get_create_payment_use_case(
     repo: MongoPaymentRepository = Depends(get_repository),
     gateway: PaymentGateway = Depends(get_gateway)
@@ -33,9 +37,10 @@ def get_status_use_case(
     return GetPaymentStatusUseCase(repo)
 
 def get_webhook_use_case(
-    repo: MongoPaymentRepository = Depends(get_repository)
+    repo: MongoPaymentRepository = Depends(get_repository),
+    order_service: OrderServiceHTTP = Depends(get_order_service)
 ) -> ProcessPaymentWebhookUseCase:
-    return ProcessPaymentWebhookUseCase(repo)
+    return ProcessPaymentWebhookUseCase(repo, order_service)
 
 def get_payment_by_order_use_case(
     repo: MongoPaymentRepository = Depends(get_repository)

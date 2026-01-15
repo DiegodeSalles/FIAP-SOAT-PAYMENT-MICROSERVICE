@@ -3,7 +3,7 @@ from pytest_bdd import scenarios, given, when, then, parsers
 from fastapi.testclient import TestClient
 from src.main import app
 from src.domain.entities import Payment, PaymentStatus
-from src.infrastructure.api.webhook_router import get_repository
+from src.infrastructure.api.webhook_router import get_repository, get_order_service
 from unittest.mock import AsyncMock
 
 scenarios('../features/webhook.feature')
@@ -26,8 +26,15 @@ def mock_repository():
     return mock
 
 @pytest.fixture
-def client(mock_repository):
+def mock_order_service():
+    mock = AsyncMock()
+    mock.notify_payment_status.return_value = None
+    return mock
+
+@pytest.fixture
+def client(mock_repository, mock_order_service):
     app.dependency_overrides[get_repository] = lambda: mock_repository
+    app.dependency_overrides[get_order_service] = lambda: mock_order_service
     
     with TestClient(app) as client:
         yield client

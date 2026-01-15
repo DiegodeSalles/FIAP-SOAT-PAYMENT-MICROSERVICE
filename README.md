@@ -83,6 +83,7 @@ MONGODB_DB_NAME=payment_db
 MP_ACCESS_TOKEN=seu_token_de_teste_mercado_pago
 MP_POS_ID=seu_pos_id_mercado_pago
 MP_BASE_URL=https://api.mercadopago.com
+ORDER_STATUS_URL=https://servico-de-pedidos.com
 ```
 
 3️⃣ Suba a aplicação

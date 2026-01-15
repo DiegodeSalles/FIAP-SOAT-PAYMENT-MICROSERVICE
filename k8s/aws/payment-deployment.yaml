@@ -45,3 +45,8 @@ spec:
                 configMapKeyRef:
                   name: payment-config
                   key: MP_BASE_URL
+            - name: ORDER_STATUS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: ORDER_STATUS_URL
