@@ -14,6 +14,8 @@ Ele integra-se com o **Mercado Pago** para geração de **QR Codes (Pix)** e pro
 
 O projeto foi desenhado seguindo rigorosamente a **Arquitetura Hexagonal (Ports and Adapters)**, garantindo **desacoplamento**, **testabilidade** e **facilidade de manutenção**.
 
+Este microserviço faz parte do Projeto FIAP Fastfood, [disponível aqui](https://github.com/WeesleyAlves/FIAP-SOAT-FASTFOOD-INFRA-MS).
+
 ## 🏛️ Arquitetura do Projeto
 
 O código está organizado para separar as **regras de negócio (Domínio)** de **frameworks externos** (API, Banco de Dados).
