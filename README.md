@@ -59,7 +59,8 @@ O projeto está integrado com o **SonarCloud** para análise contínua de qualid
 Acesse o dashboard do SonarCloud em:
 - https://sonarcloud.io/dashboard?id=WeesleyAlves_FIAP-SOAT-MICROSERVICE-ORDERS
 
-<img width="1634" height="980" alt="coverage-ms-payment" src="https://github.com/user-attachments/assets/6df3525a-336c-4072-9ebe-88165595a5c6" />
+<img width="1739" height="972" alt="image" src="https://github.com/user-attachments/assets/aef17c64-53d8-493a-a078-54846719c351" />
+
 
 
 ## 🚀 Como Rodar (Jeito Fácil: Docker)
