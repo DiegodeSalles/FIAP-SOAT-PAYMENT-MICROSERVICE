@@ -9,6 +9,7 @@ services:
       - MP_ACCESS_TOKEN=${MP_ACCESS_TOKEN}
       - MP_POS_ID=${MP_POS_ID}
       - MP_BASE_URL=${MP_BASE_URL}
+      - ORDER_STATUS_URL=${ORDER_STATUS_URL}
     depends_on:
       - mongodb
 
