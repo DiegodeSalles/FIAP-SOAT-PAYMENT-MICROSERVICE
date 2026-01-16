@@ -14,6 +14,8 @@ Ele integra-se com o **Mercado Pago** para geração de **QR Codes (Pix)** e pro
 
 O projeto foi desenhado seguindo rigorosamente a **Arquitetura Hexagonal (Ports and Adapters)**, garantindo **desacoplamento**, **testabilidade** e **facilidade de manutenção**.
 
+Este microserviço faz parte do Projeto FIAP Fastfood, [disponível aqui](https://github.com/WeesleyAlves/FIAP-SOAT-FASTFOOD-INFRA-MS).
+
 ## 🏛️ Arquitetura do Projeto
 
 O código está organizado para separar as **regras de negócio (Domínio)** de **frameworks externos** (API, Banco de Dados).
@@ -59,7 +61,8 @@ O projeto está integrado com o **SonarCloud** para análise contínua de qualid
 Acesse o dashboard do SonarCloud em:
 - https://sonarcloud.io/dashboard?id=WeesleyAlves_FIAP-SOAT-MICROSERVICE-ORDERS
 
-<img width="1634" height="980" alt="coverage-ms-payment" src="https://github.com/user-attachments/assets/6df3525a-336c-4072-9ebe-88165595a5c6" />
+<img width="1739" height="972" alt="image" src="https://github.com/user-attachments/assets/aef17c64-53d8-493a-a078-54846719c351" />
+
 
 
 ## 🚀 Como Rodar (Jeito Fácil: Docker)
